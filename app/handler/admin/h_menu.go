@@ -5,6 +5,7 @@ import (
 	"github.com/google/wire"
 	"github.com/ops-cn/common/ginplus"
 	"github.com/ops-cn/common/schema"
+	"github.com/ops-cn/gin-api/app/service/admin"
 )
 
 // MenuSet 注入Menu
@@ -12,6 +13,7 @@ var MenuSet = wire.NewSet(wire.Struct(new(Menu), "*"))
 
 // Menu 菜单管理
 type Menu struct {
+	MenuBll admin.IMenu
 }
 
 // Query 查询数据
