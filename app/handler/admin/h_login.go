@@ -3,13 +3,13 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/ops-cn/admin/app/bll"
-	"github.com/ops-cn/common/captcha"
 	"github.com/ops-cn/common/config"
 	"github.com/ops-cn/common/errors"
 	"github.com/ops-cn/common/ginplus"
 	"github.com/ops-cn/common/logger"
 	"github.com/ops-cn/common/schema"
+	"github.com/ops-cn/common/thirdparty/captcha"
+	"github.com/ops-cn/gin-api/app/service/admin"
 )
 
 // LoginSet 注入Login
@@ -17,7 +17,7 @@ var LoginSet = wire.NewSet(wire.Struct(new(Login), "*"))
 
 // Login 登录管理
 type Login struct {
-	LoginBll bll.ILogin
+	LoginBll admin.ILogin
 }
 
 // GetCaptcha 获取验证码信息

@@ -1,11 +1,11 @@
 package api
 
 import (
+	"github.com/ops-cn/gin-api/app/service/admin"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/ops-cn/admin/app/bll"
 	"github.com/ops-cn/common/errors"
 	"github.com/ops-cn/common/ginplus"
 	"github.com/ops-cn/common/schema"
@@ -16,7 +16,7 @@ var UserSet = wire.NewSet(wire.Struct(new(User), "*"))
 
 // User 用户管理
 type User struct {
-	UserBll bll.IUser
+	UserBll admin.IUser
 }
 
 // Query 查询数据

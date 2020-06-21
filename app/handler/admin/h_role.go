@@ -3,30 +3,28 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/ops-cn/admin/app/bll"
 	"github.com/ops-cn/common/ginplus"
 	"github.com/ops-cn/common/schema"
 )
 
-// MenuSet 注入Menu
-var MenuSet = wire.NewSet(wire.Struct(new(Menu), "*"))
+// RoleSet 注入Role
+var RoleSet = wire.NewSet(wire.Struct(new(Role), "*"))
 
-// Menu 菜单管理
-type Menu struct {
-	MenuBll bll.IMenu
+// Role 角色管理
+type Role struct {
 }
 
 // Query 查询数据
-func (a *Menu) Query(c *gin.Context) {
+func (a *Role) Query(c *gin.Context) {
 	ctx := c.Request.Context()
-	var params schema.MenuQueryParam
+	var params schema.RoleQueryParam
 	if err := ginplus.ParseQuery(c, &params); err != nil {
 		ginplus.ResError(c, err)
 		return
 	}
 
 	params.Pagination = true
-	result, err := a.MenuBll.Query(ctx, params, schema.MenuQueryOptions{
+	result, err := a.RoleBll.Query(ctx, params, schema.RoleQueryOptions{
 		OrderFields: schema.NewOrderFields(schema.NewOrderField("sequence", schema.OrderByDESC)),
 	})
 	if err != nil {
@@ -36,29 +34,29 @@ func (a *Menu) Query(c *gin.Context) {
 	ginplus.ResPage(c, result.Data, result.PageResult)
 }
 
-// QueryTree 查询菜单树
-func (a *Menu) QueryTree(c *gin.Context) {
+// QuerySelect 查询选择数据
+func (a *Role) QuerySelect(c *gin.Context) {
 	ctx := c.Request.Context()
-	var params schema.MenuQueryParam
+	var params schema.RoleQueryParam
 	if err := ginplus.ParseQuery(c, &params); err != nil {
 		ginplus.ResError(c, err)
 		return
 	}
 
-	result, err := a.MenuBll.Query(ctx, params, schema.MenuQueryOptions{
+	result, err := a.RoleBll.Query(ctx, params, schema.RoleQueryOptions{
 		OrderFields: schema.NewOrderFields(schema.NewOrderField("sequence", schema.OrderByDESC)),
 	})
 	if err != nil {
 		ginplus.ResError(c, err)
 		return
 	}
-	ginplus.ResList(c, result.Data.ToTree())
+	ginplus.ResList(c, result.Data)
 }
 
 // Get 查询指定数据
-func (a *Menu) Get(c *gin.Context) {
+func (a *Role) Get(c *gin.Context) {
 	ctx := c.Request.Context()
-	item, err := a.MenuBll.Get(ctx, c.Param("id"))
+	item, err := a.RoleBll.Get(ctx, c.Param("id"))
 	if err != nil {
 		ginplus.ResError(c, err)
 		return
@@ -67,16 +65,16 @@ func (a *Menu) Get(c *gin.Context) {
 }
 
 // Create 创建数据
-func (a *Menu) Create(c *gin.Context) {
+func (a *Role) Create(c *gin.Context) {
 	ctx := c.Request.Context()
-	var item schema.Menu
+	var item schema.Role
 	if err := ginplus.ParseJSON(c, &item); err != nil {
 		ginplus.ResError(c, err)
 		return
 	}
 
 	item.Creator = ginplus.GetUserID(c)
-	result, err := a.MenuBll.Create(ctx, item)
+	result, err := a.RoleBll.Create(ctx, item)
 	if err != nil {
 		ginplus.ResError(c, err)
 		return
@@ -85,15 +83,15 @@ func (a *Menu) Create(c *gin.Context) {
 }
 
 // Update 更新数据
-func (a *Menu) Update(c *gin.Context) {
+func (a *Role) Update(c *gin.Context) {
 	ctx := c.Request.Context()
-	var item schema.Menu
+	var item schema.Role
 	if err := ginplus.ParseJSON(c, &item); err != nil {
 		ginplus.ResError(c, err)
 		return
 	}
 
-	err := a.MenuBll.Update(ctx, c.Param("id"), item)
+	err := a.RoleBll.Update(ctx, c.Param("id"), item)
 	if err != nil {
 		ginplus.ResError(c, err)
 		return
@@ -102,9 +100,9 @@ func (a *Menu) Update(c *gin.Context) {
 }
 
 // Delete 删除数据
-func (a *Menu) Delete(c *gin.Context) {
+func (a *Role) Delete(c *gin.Context) {
 	ctx := c.Request.Context()
-	err := a.MenuBll.Delete(ctx, c.Param("id"))
+	err := a.RoleBll.Delete(ctx, c.Param("id"))
 	if err != nil {
 		ginplus.ResError(c, err)
 		return
@@ -113,9 +111,9 @@ func (a *Menu) Delete(c *gin.Context) {
 }
 
 // Enable 启用数据
-func (a *Menu) Enable(c *gin.Context) {
+func (a *Role) Enable(c *gin.Context) {
 	ctx := c.Request.Context()
-	err := a.MenuBll.UpdateStatus(ctx, c.Param("id"), 1)
+	err := a.RoleBll.UpdateStatus(ctx, c.Param("id"), 1)
 	if err != nil {
 		ginplus.ResError(c, err)
 		return
@@ -124,9 +122,9 @@ func (a *Menu) Enable(c *gin.Context) {
 }
 
 // Disable 禁用数据
-func (a *Menu) Disable(c *gin.Context) {
+func (a *Role) Disable(c *gin.Context) {
 	ctx := c.Request.Context()
-	err := a.MenuBll.UpdateStatus(ctx, c.Param("id"), 2)
+	err := a.RoleBll.UpdateStatus(ctx, c.Param("id"), 2)
 	if err != nil {
 		ginplus.ResError(c, err)
 		return
